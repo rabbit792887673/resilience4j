@@ -67,7 +67,7 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
     private final TimeUnit timestampUnit;
 
     /**
-     * Creates a circuitBreaker.
+     * Creates a circuitBreaker. 创建一个熔断器
      *
      * @param name                 the name of the CircuitBreaker
      * @param circuitBreakerConfig The CircuitBreaker configuration.
@@ -76,11 +76,15 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
      */
     private CircuitBreakerStateMachine(String name, CircuitBreakerConfig circuitBreakerConfig,
         Clock clock, SchedulerFactory schedulerFactory, Map<String, String> tags) {
+
         this.name = name;
+        // Objects.requireNonNull(),检查指定的对象引用是否为空。该方法主要用于在方法和构造函数中进行参数验证
         this.circuitBreakerConfig = Objects
             .requireNonNull(circuitBreakerConfig, "Config must not be null");
+        // 熔断器的事件处理器
         this.eventProcessor = new CircuitBreakerEventProcessor();
         this.clock = clock;
+        // 使用给定的初始值(关闭状态)创建一个新的AtomicReference
         this.stateReference = new AtomicReference<>(new ClosedState());
         this.schedulerFactory = schedulerFactory;
         this.tags = Objects.requireNonNull(tags, "Tags must not be null");
@@ -508,6 +512,9 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
         }
     }
 
+    /**
+     * 熔断器事件处理器
+     */
     private class CircuitBreakerEventProcessor extends
         EventProcessor<CircuitBreakerEvent> implements EventConsumer<CircuitBreakerEvent>,
         EventPublisher {

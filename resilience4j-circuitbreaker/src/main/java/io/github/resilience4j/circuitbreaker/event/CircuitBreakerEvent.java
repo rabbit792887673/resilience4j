@@ -22,6 +22,7 @@ import java.time.ZonedDateTime;
 
 /**
  * An event which is created by a CircuitBreaker.
+ * 由CircuitBreaker创建的事件
  */
 public interface CircuitBreakerEvent {
 

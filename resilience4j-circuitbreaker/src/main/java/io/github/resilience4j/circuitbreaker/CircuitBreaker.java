@@ -943,6 +943,7 @@ public interface CircuitBreaker {
 
     /**
      * An EventPublisher can be used to register event consumers.
+     * 事件发布者可用于注册事件使用者。
      */
     interface EventPublisher extends
         io.github.resilience4j.core.EventPublisher<CircuitBreakerEvent> {
