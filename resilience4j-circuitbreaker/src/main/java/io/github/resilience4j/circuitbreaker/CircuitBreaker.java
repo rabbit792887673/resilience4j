@@ -180,15 +180,17 @@ public interface CircuitBreaker {
 
     /**
      * Returns a supplier which is decorated by a CircuitBreaker.
+     * 返回一个由熔断器装饰的supplier
      *
-     * @param circuitBreaker the CircuitBreaker
-     * @param supplier       the original supplier
-     * @param <T>            the type of results supplied by this supplier
+     * @param circuitBreaker the CircuitBreaker 熔断器
+     * @param supplier       the original supplier 原来的supplier
+     * @param <T>            the type of results supplied by this supplier 该supplier提供的结果类型
      * @return a supplier which is decorated by a CircuitBreaker.
      */
     static <T> Supplier<T> decorateSupplier(CircuitBreaker circuitBreaker, Supplier<T> supplier) {
         return () -> {
             circuitBreaker.acquirePermission();
+            // 开始执行时间
             final long start = circuitBreaker.getCurrentTimestamp();
             try {
                 T result = supplier.get();
@@ -463,6 +465,7 @@ public interface CircuitBreaker {
     /**
      * Try to obtain a permission to execute a call. If a call is not permitted, the number of not
      * permitted calls is increased.
+     * 尝试获得执行请求的权限。如果一个调用不被允许，不被允许的调用数会增加。
      * <p>
      * Throws a CallNotPermittedException when the state is OPEN or FORCED_OPEN. Returns when the
      * state is CLOSED or DISABLED. Returns when the state is HALF_OPEN and further test calls are
