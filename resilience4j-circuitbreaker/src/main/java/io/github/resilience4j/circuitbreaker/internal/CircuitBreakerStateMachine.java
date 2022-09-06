@@ -133,11 +133,11 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
     }
 
     /**
-     * Creates a circuitBreaker.
+     * Creates a circuitBreaker. 创建一个熔断器
      *
-     * @param name                 the name of the CircuitBreaker
-     * @param circuitBreakerConfig The CircuitBreaker configuration.
-     * @param tags                 Tags to add to the CircuitBreaker.
+     * @param name                 the name of the CircuitBreaker 熔断器的名称
+     * @param circuitBreakerConfig The CircuitBreaker configuration. 熔断器的配置
+     * @param tags                 Tags to add to the CircuitBreaker. 为熔断器添加的标签
      */
     public CircuitBreakerStateMachine(String name, CircuitBreakerConfig circuitBreakerConfig,
         Map<String, String> tags) {

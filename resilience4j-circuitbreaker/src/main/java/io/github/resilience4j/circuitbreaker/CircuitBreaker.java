@@ -356,17 +356,21 @@ public interface CircuitBreaker {
 
     /**
      * Creates a CircuitBreaker with a custom CircuitBreaker configuration.
+     * 使用自定义配置配置创建一个熔断器
      * <p>
      * The {@code tags} passed will be appended to the tags already configured for the registry.
+     * 传递的{@code tags}将被附加到已经为注册表配置的标签中。
      * When tags (keys) of the two collide the tags passed with this method will override the tags
      * of the registry.
+     * 当两个标记(键)发生冲突时，使用此方法传递的标记将覆盖注册表的标记。
      *
-     * @param name                 the name of the CircuitBreaker
-     * @param circuitBreakerConfig a custom CircuitBreaker configuration
-     * @param tags                 tags added to the Retry
-     * @return a CircuitBreaker with a custom CircuitBreaker configuration.
+     * @param name                 the name of the CircuitBreaker 熔断器的名称
+     * @param circuitBreakerConfig a custom CircuitBreaker configuration 熔断器的配置
+     * @param tags                 tags added to the Retry 添加到重试的标记
+     * @return a CircuitBreaker with a custom CircuitBreaker configuration. 自定义配置构建的一个熔断器
      */
     static CircuitBreaker of(String name, CircuitBreakerConfig circuitBreakerConfig, Map<String, String> tags) {
+        // 状态机熔断器
         return new CircuitBreakerStateMachine(name, circuitBreakerConfig, tags);
     }
 
