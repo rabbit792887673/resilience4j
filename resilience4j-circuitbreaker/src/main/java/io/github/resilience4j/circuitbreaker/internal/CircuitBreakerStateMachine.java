@@ -214,10 +214,18 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
         }
     }
 
+    /**
+     * error事件处理器
+     *
+     * @param duration     The elapsed time duration of the call 调用的执行时长
+     * @param durationUnit The duration unit 时间单位
+     * @param throwable    The throwable which must be recorded
+     */
     @Override
     public void onError(long duration, TimeUnit durationUnit, Throwable throwable) {
         // Handle the case if the completable future throws a CompletionException wrapping the original exception
         // where original exception is the the one to retry not the CompletionException.
+        // 如果可完成的future抛出一个CompletionException包装的原始异常，其中原始异常是要重试的异常，而不是CompletionException，则处理这种情况。
         if (throwable instanceof CompletionException || throwable instanceof ExecutionException) {
             Throwable cause = throwable.getCause();
             handleThrowable(duration, durationUnit, cause);

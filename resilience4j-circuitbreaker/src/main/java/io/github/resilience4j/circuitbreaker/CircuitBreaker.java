@@ -189,17 +189,21 @@ public interface CircuitBreaker {
      */
     static <T> Supplier<T> decorateSupplier(CircuitBreaker circuitBreaker, Supplier<T> supplier) {
         return () -> {
+            // 是否满足执行条件
             circuitBreaker.acquirePermission();
             // 开始执行时间
             final long start = circuitBreaker.getCurrentTimestamp();
             try {
                 T result = supplier.get();
+                // 执行时长
                 long duration = circuitBreaker.getCurrentTimestamp() - start;
                 circuitBreaker.onResult(duration, circuitBreaker.getTimestampUnit(), result);
                 return result;
             } catch (Exception exception) {
                 // Do not handle java.lang.Error
+                // 执行时长
                 long duration = circuitBreaker.getCurrentTimestamp() - start;
+                // error事件执行器
                 circuitBreaker.onError(duration, circuitBreaker.getTimestampUnit(), exception);
                 throw exception;
             }
@@ -481,9 +485,10 @@ public interface CircuitBreaker {
 
     /**
      * Records a failed call. This method must be invoked when a call failed.
+     * 记录调用失败。当调用失败时，必须调用此方法。
      *
-     * @param duration     The elapsed time duration of the call
-     * @param durationUnit The duration unit
+     * @param duration     The elapsed time duration of the call 调用的执行时长
+     * @param durationUnit The duration unit 时间单位
      * @param throwable    The throwable which must be recorded
      */
     void onError(long duration, TimeUnit durationUnit, Throwable throwable);
