@@ -659,8 +659,12 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
 
         @Override
         public void handlePossibleTransition(CircuitBreakerConfig.TransitionCheckResult result) {
+
+            //
             if (result.isTransitionToOpen() && isClosed.compareAndSet(true, false)) {
+                // 有等待时长
                 if (result.getWaitDuration() != null) {
+                    // 变为打开状态
                     transitionToOpenStateFor(result.getWaitDuration());
                 } else if (result.getWaitUntil() != null) {
                     transitionToOpenStateUntil(result.getWaitUntil());
