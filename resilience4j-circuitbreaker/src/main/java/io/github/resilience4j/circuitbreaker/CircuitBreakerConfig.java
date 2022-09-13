@@ -231,14 +231,24 @@ public class CircuitBreakerConfig implements Serializable {
     /**
      * Result of the {@link #getTransitionOnResult()} function with which one can tell the circuit
      * breaker to transition to a different state if the result of a call meet the desired criteria.
+     * 如果调func调用的结果满足期望的条件，可以告诉熔断器转换到不同的状态。
      */
     public static class TransitionCheckResult {
 
+        /**
+         * 转变为打开状态
+         */
         private final boolean transitionToOpen;
 
+        /**
+         * 等待时间
+         */
         @Nullable
         private final Duration waitDuration;
 
+        /**
+         * 时间单位
+         */
         @Nullable
         private final Instant waitUntil;
 

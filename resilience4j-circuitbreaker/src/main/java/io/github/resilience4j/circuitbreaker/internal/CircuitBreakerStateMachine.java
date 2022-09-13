@@ -657,6 +657,10 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
             checkIfThresholdsExceeded(circuitBreakerMetrics.onSuccess(duration, durationUnit));
         }
 
+        /**
+         *
+         * @param result
+         */
         @Override
         public void handlePossibleTransition(CircuitBreakerConfig.TransitionCheckResult result) {
 
@@ -666,9 +670,13 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
                 if (result.getWaitDuration() != null) {
                     // 变为打开状态
                     transitionToOpenStateFor(result.getWaitDuration());
+
+                    // 有等待时间单位
                 } else if (result.getWaitUntil() != null) {
+                    //
                     transitionToOpenStateUntil(result.getWaitUntil());
                 } else {
+                    // 过渡检查导致打开请求，但现在设置了等待属性?这是不应该发生的 ???
                     throw new IllegalArgumentException("Transition check resulted in open request but now wait " +
                         "attribute was set? This should never happen");
                 }
