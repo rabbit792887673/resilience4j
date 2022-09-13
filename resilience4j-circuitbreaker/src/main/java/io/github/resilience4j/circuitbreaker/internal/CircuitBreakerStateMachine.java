@@ -430,6 +430,11 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
         stateTransition(HALF_OPEN, currentState -> new HalfOpenState(currentState.attempts()));
     }
 
+    /**
+     * 需要触发的事件
+     * @param event 由熔断器创建的事件
+     * @return
+     */
     private boolean shouldPublishEvents(CircuitBreakerEvent event) {
         return stateReference.get().shouldPublishEvents(event);
     }
