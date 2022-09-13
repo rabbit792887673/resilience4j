@@ -259,12 +259,14 @@ public class CircuitBreakerConfig implements Serializable {
             this.waitUntil = waitUntil;
         }
 
-        /** Return this result if you do not want any transition to happen. */
+        /** Return this result if you do not want any transition to happen.
+         * 如果不希望发生任何状态转换，则返回此结果 */
         public static TransitionCheckResult noTransition() {
             return new TransitionCheckResult(false, null, null);
         }
 
-        /** This will make the circuit breaker call {@link CircuitBreaker#transitionToOpenState()}  */
+        /** This will make the circuit breaker call {@link CircuitBreaker#transitionToOpenState()}
+         * 该方法将会让熔断器调用状态为打开的方法 */
         public static TransitionCheckResult transitionToOpen() {
             return new TransitionCheckResult(true, null, null);
         }

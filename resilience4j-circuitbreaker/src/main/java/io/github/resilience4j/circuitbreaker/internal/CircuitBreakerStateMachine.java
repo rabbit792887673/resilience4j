@@ -658,7 +658,7 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
         }
 
         /**
-         *
+         * 处理可能的状态转换
          * @param result
          */
         @Override
