@@ -34,10 +34,25 @@ import static io.github.resilience4j.core.metrics.Metrics.Outcome;
 
 class CircuitBreakerMetrics implements CircuitBreaker.Metrics {
 
+    /**
+     * 指标
+     */
     private final Metrics metrics;
+    /**
+     * 失败率阈值
+     */
     private final float failureRateThreshold;
+    /**
+     * 慢请求率阈值
+     */
     private final float slowCallRateThreshold;
+    /**
+     * 请求时长阈值(纳秒？)
+     */
     private final long slowCallDurationThresholdInNanos;
+    /**
+     * 不允许的请求数量阈值
+     */
     private final LongAdder numberOfNotPermittedCalls;
     private int minimumNumberOfCalls;
 

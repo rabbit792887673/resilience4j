@@ -270,12 +270,22 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
         stateReference.get().onSuccess(duration, durationUnit);
     }
 
+    /**
+     *
+     * @param duration     The elapsed time duration of the call
+     * @param durationUnit The duration unit
+     * @param result       The result of the protected function
+     */
     @Override
     public void onResult(long duration, TimeUnit durationUnit, @Nullable Object result) {
+
+        // 是记录的预期结果
         if (result != null && circuitBreakerConfig.getRecordResultPredicate().test(result)) {
             LOG.debug("CircuitBreaker '{}' recorded a result type '{}' as failure:", name, result.getClass());
             ResultRecordedAsFailureException failure = new ResultRecordedAsFailureException(name, result);
+            // 触发熔断器error事件
             publishCircuitErrorEvent(name, duration, durationUnit, failure);
+            //
             stateReference.get().onError(duration, durationUnit, failure);
         } else {
             onSuccess(duration, durationUnit);
@@ -286,13 +296,15 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
     }
 
     /**
-     * todo***
+     * 处理可能的状态的转换
      * @param result
      */
     private void handlePossibleTransition(Either<Object, Throwable> result) {
-
-        CircuitBreakerConfig.TransitionCheckResult transitionCheckResult = circuitBreakerConfig.getTransitionOnResult()
+        //
+        CircuitBreakerConfig.TransitionCheckResult transitionCheckResult =
+            circuitBreakerConfig.getTransitionOnResult()
             .apply(result);
+        //
         stateReference.get().handlePossibleTransition(transitionCheckResult);
     }
 
@@ -491,12 +503,21 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
         publishEventIfHasConsumer(new CircuitBreakerOnSlowCallRateExceededEvent(name, slowCallRate));
     }
 
+
+    /**
+     * 触发熔断器超过阈值的事件
+     * @param result 结果
+     * @param metrics 熔断器相关阈值指标
+     */
     private void publishCircuitThresholdsExceededEvent(final Result result, final CircuitBreakerMetrics metrics) {
+        // 失败率超过阈值
         if (Result.hasFailureRateExceededThreshold(result)) {
+            // 触发熔断器失败率超过阈值事件
             publishCircuitFailureRateExceededEvent(getName(), metrics.getFailureRate());
         }
-
+        // 慢请求率超过阈值
         if (Result.hasSlowCallRateExceededThreshold(result)) {
+            // 触发熔断器慢请求率超过阈值事件
             publishCircuitSlowCallRateExceededEvent(getName(), metrics.getSlowCallRate());
         }
     }
@@ -655,7 +676,7 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
 
         @Override
         public void onError(long duration, TimeUnit durationUnit, Throwable throwable) {
-            // CircuitBreakerMetrics is thread-safe
+            // CircuitBreakerMetrics is thread-safe 。CircuitBreakerMetrics是线程安全的
             checkIfThresholdsExceeded(circuitBreakerMetrics.onError(duration, durationUnit));
         }
 
@@ -698,12 +719,16 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
 
         /**
          * Transitions to open state when thresholds have been exceeded.
+         * 超过阈值时转换到打开状态
          *
          * @param result the Result
          */
         private void checkIfThresholdsExceeded(Result result) {
+            // 结果超过了阈值 && 状态为关闭状态
             if (Result.hasExceededThresholds(result) && isClosed.compareAndSet(true, false)) {
+                // 触发熔断器超过阈值的事件
                 publishCircuitThresholdsExceededEvent(result, circuitBreakerMetrics);
+                // 熔断器变为打开状态
                 transitionToOpenState();
             }
         }
