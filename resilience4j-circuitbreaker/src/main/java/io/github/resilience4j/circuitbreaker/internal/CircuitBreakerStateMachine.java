@@ -393,12 +393,20 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
             currentState -> new OpenState(currentState.attempts() + 1, currentState.getMetrics()));
     }
 
+    /**
+     * todo???
+     * @param waitDuration how long should we wait in open state
+     */
     @Override
     public void transitionToOpenStateFor(Duration waitDuration) {
         stateTransition(OPEN,
             currentState -> new OpenState(currentState.attempts(), waitDuration, currentState.getMetrics()));
     }
 
+    /**
+     * todo???
+     * @param waitUntil how long should we wait in open state
+     */
     @Override
     public void transitionToOpenStateUntil(Instant waitUntil) {
         stateTransition(OPEN,
