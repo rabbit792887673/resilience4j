@@ -654,6 +654,7 @@ public interface CircuitBreaker {
 
     /**
      * Decorates and executes the decorated Supplier.
+     * 装饰并执行装饰的supplier
      *
      * @param supplier the original Supplier
      * @param <T>      the type of results supplied by this supplier

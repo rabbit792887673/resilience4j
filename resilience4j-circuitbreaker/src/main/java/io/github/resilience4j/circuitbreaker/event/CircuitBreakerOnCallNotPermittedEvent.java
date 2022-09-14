@@ -21,6 +21,8 @@ package io.github.resilience4j.circuitbreaker.event;
 /**
  * A CircuitBreakerEvent which informs that a call was not permitted, because the CircuitBreaker is
  * OPEN.
+ *
+ * 一个熔断器事件用来通知不被允许的请求，因为熔断器是打开的
  */
 public class CircuitBreakerOnCallNotPermittedEvent extends AbstractCircuitBreakerEvent {
 

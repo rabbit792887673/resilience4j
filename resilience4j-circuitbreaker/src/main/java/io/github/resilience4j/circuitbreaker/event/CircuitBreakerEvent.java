@@ -35,6 +35,7 @@ public interface CircuitBreakerEvent {
 
     /**
      * Returns the type of the CircuitBreaker event.
+     * 返回熔断器时事件类型
      *
      * @return the type of the CircuitBreaker event
      */

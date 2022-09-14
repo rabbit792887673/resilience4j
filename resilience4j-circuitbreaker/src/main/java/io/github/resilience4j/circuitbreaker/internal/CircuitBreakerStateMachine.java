@@ -56,10 +56,14 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
 
     private static final Logger LOG = LoggerFactory.getLogger(CircuitBreakerStateMachine.class);
 
+    // 熔断器名称
     private final String name;
     private final AtomicReference<CircuitBreakerState> stateReference;
+    // 熔断器配置
     private final CircuitBreakerConfig circuitBreakerConfig;
+
     private final Map<String, String> tags;
+    // 熔断器时间处理器
     private final CircuitBreakerEventProcessor eventProcessor;
     private final Clock clock;
     private final SchedulerFactory schedulerFactory;
@@ -207,8 +211,10 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
     @Override
     public void acquirePermission() {
         try {
+            // 获取执行条件
             stateReference.get().acquirePermission();
         } catch (Exception e) {
+            // 触发请求不被允许事件
             publishCallNotPermittedEvent();
             throw e;
         }
@@ -439,6 +445,10 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
         return stateReference.get().shouldPublishEvents(event);
     }
 
+    /**
+     * 如果有consumer则触发事件
+     * @param event
+     */
     private void publishEventIfHasConsumer(CircuitBreakerEvent event) {
         if (!eventProcessor.hasConsumers()) {
             LOG.debug("No Consumers: Event {} not published", event.getEventType());
@@ -472,6 +482,9 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
         publishEventIfHasConsumer(new CircuitBreakerOnResetEvent(name));
     }
 
+    /**
+     * 触发请求不被允许的事件
+     */
     private void publishCallNotPermittedEvent() {
         publishEventIfHasConsumer(new CircuitBreakerOnCallNotPermittedEvent(name));
     }
@@ -536,6 +549,9 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
 
         boolean tryAcquirePermission();
 
+        /**
+         * 获取执行条件
+         */
         void acquirePermission();
 
         void releasePermission();
@@ -668,6 +684,7 @@ public final class CircuitBreakerStateMachine implements CircuitBreaker {
 
         /**
          * Does not throw an exception, because the CircuitBreaker is closed.
+         * 不抛出异常，因为熔断器是关闭状态
          */
         @Override
         public void acquirePermission() {
